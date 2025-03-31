@@ -7,15 +7,15 @@ Explicar la realización del _Capture the flag_ siguiente dentro del mundo educa
 
 ## Que hemos aprendido?
 
-- Realizar fingerprinting y enumeración de puertos y enumeración web.
+- Realizar fingerprinting y enumeración de puertos y enumeración web (en este caso utilizando una nueva herramienta llamada Dirsearch.
 - 
 - Escalada de privilegios.
 
 ## Herramientas utilizadas
 
 - Kali Linux.
-- Enumeración: nmap, dirsearch.
-- Penetración: . 
+- Enumeración: Nmap, Dirsearch.
+- Penetración: Metasploit. 
 
 ## Steps
 
@@ -41,7 +41,24 @@ Seguidamente, enumero los directorios y archivos alojados en el servidor. En est
 
 ![image](https://github.com/user-attachments/assets/56b29f77-5796-4371-8c6b-82ec6db98110)
 
-Con la misma herramienta busco posibles archivos cambiadno la lista por 'raft-large-files.txt'. En este caso solo ha encontrado el archivo ‘phpinfo.php’, el cual se puede acceder desde el navegador de Firefox. Dentro hay configuraciones que se pueden utilizar a nuestro favor, pero lo interesante es el uso del módulo FPM/FastCGI para manejar las solicitudes con el servidor web, lo cual me será de utilidad para el ataque.
+Con la misma herramienta busco posibles archivos cambiadno la lista por 'raft-large-files.txt'. En este caso solo ha encontrado el archivo ‘phpinfo.php’, el cual se puede acceder desde el navegador de Firefox. Dentro hay configuraciones que se pueden utilizar a nuestro favor, pero lo interesante es el uso del módulo *FPM/FastCGI* para manejar las solicitudes con el servidor web, lo cual me será de utilidad para el ataque.
 
 ### Vulnerabilidades explotadas
 
+La versión del servidor *nginx* pertenece al año 2018, así que con la ayuda de **Metasploit** voy a investigar si existe algún exploit que pueda utilizar. Además, si me fijo en el 'phpinfo.php', la versión *php* utilizada es la 7.1.33. Buscando en NIST se encuentra una vulnerabilidad que afecta al *PHP-FPM* y que presenta esta versión de *php*, la cual provoca un *buffer underflow*, donde los datos se escriben fuera de los límites del búfer y sobrescribe áreas de memoria que se encuentran justo por debajo.
+
+En *Metasploit* encuentro un módulo para arpovecahr la vulnerabilidad ‘exploit/multi/http/php_fpm_rce’. Al *exploit* en cuaestión se le debe indicar la dirección IP a atacar y el archivo que contiene el servidor, el cual es ‘phpinfo.php’ (encontrado en la enumeración web). El puerto de la máquina víctima ya está informado al 80 por defecto, pues es donde acostumbra a encontrarse el servicio *http*. De la misma manera, ya está informado la dirección IP de mi máquina y asigna el puerto 4444 para realizar la conexión.
+
+<code>set rhosts 172.17.0.2</code>  
+<code>set targeturi /phpinfo.php</code>  
+<code>run</code>  
+
+![image](https://github.com/user-attachments/assets/31d44957-372e-4457-9a50-df7e32cc044b)
+
+El *exploit* nos permite acceder a la máquina e interactuar con ella mediante el *meterpreter*, para tener la *shell* más amigable y poder hacer uso de todos los comandos disponible, se introduce el comando *shell*. Lo siguiente es listar el contenido del directorio actual (/var/www/html) y aquí aparecen todos los directorios encontrados anteriormente por *Dirsearch*. Al dirigirnos a la carpeta ‘admin’, encontramos el archivo oculto ‘.flag.txt’. 
+
+**Flag**: 58C250724441ED96979209921FAC3D89
+
+![image](https://github.com/user-attachments/assets/d7349ff0-4d1b-403f-abc9-b5c17a291205)
+
+Ahora es necesario escalar privilegios para encontrar la segunda bandera. Para ello, me dirijo a la otra carpeta sospechosa que ya había encontrado en la enumeración web: ‘notes’. Dentro de esta encuentro el archivo ‘notes.txt’, el cual contiene los números 1, 3 y 11. Así que me dispongo a revisar las carpetas con los mismos nombres que se encontraban en /var/www/html.
