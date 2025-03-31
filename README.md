@@ -8,7 +8,7 @@ Explicar la realización del _Capture the flag_ siguiente dentro del mundo educa
 ## Que hemos aprendido?
 
 - Realizar fingerprinting y enumeración de puertos y enumeración web (en este caso utilizando una nueva herramienta llamada Dirsearch.
-- Utilizar la herramienta *Metasploit* para explotar una vulnerabilidad.
+- Explotar vulnerabilidades con *Metasploit*.
 - Escalada de privilegios.
 
 ## Herramientas utilizadas
