@@ -8,14 +8,14 @@ Explicar la realización del _Capture the flag_ siguiente dentro del mundo educa
 ## Que hemos aprendido?
 
 - Realizar fingerprinting y enumeración de puertos y enumeración web (en este caso utilizando una nueva herramienta llamada Dirsearch.
-- 
+- Utilizar la herramienta *Metasploit* para explotar una vulnerabilidad.
 - Escalada de privilegios.
 
 ## Herramientas utilizadas
 
 - Kali Linux.
 - Enumeración: Nmap, Dirsearch.
-- Penetración: Metasploit. 
+- Penetración: Metasploit, Python3. 
 
 ## Steps
 
@@ -33,7 +33,7 @@ Además, el script por defecto de nmap informa que el acceso a la web está rest
 
 ![image](https://github.com/user-attachments/assets/068245d0-0496-4f46-9e30-789e82bb4485)
 
-Seguidamente, enumero los directorios y archivos alojados en el servidor. En este caso utilizo dirsearch para ambos propósitos con la ayuda de python3 e indicando la dirección de la herramienta. Con la opción ‘-u’ indico la URL a enumerar y con ‘-w’ la lista utilizada con los directorios a buscar.
+Seguidamente, enumero los directorios y archivos alojados en el servidor. En este caso utilizo dirsearch para ambos propósitos con la ayuda de **python3** e indicando la dirección de la herramienta. Con la opción ‘-u’ indico la URL a enumerar y con ‘-w’ la lista utilizada con los directorios a buscar.
 
 <code>python3 /usr/lib/python3/dist-packages/dirsearch/dirsearch.py -u 172.17.0.2 -w /usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-medium.txt</code>
 
