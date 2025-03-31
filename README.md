@@ -61,4 +61,10 @@ El *exploit* nos permite acceder a la máquina e interactuar con ella mediante e
 
 ![image](https://github.com/user-attachments/assets/d7349ff0-4d1b-403f-abc9-b5c17a291205)
 
-Ahora es necesario escalar privilegios para encontrar la segunda bandera. Para ello, me dirijo a la otra carpeta sospechosa que ya había encontrado en la enumeración web: ‘notes’. Dentro de esta encuentro el archivo ‘notes.txt’, el cual contiene los números 1, 3 y 11. Así que me dispongo a revisar las carpetas con los mismos nombres que se encontraban en /var/www/html.
+Ahora es necesario escalar privilegios para encontrar la segunda bandera. Para ello, me dirijo a la otra carpeta sospechosa que ya había encontrado en la enumeración web: ‘notes’. Dentro de esta encuentro el archivo ‘notes.txt’, el cual contiene únicamente los números 1, 3 y 11. Así que me dispongo a revisar las carpetas con los mismos nombres que se encontraban en '/var/www/html'. Dentro de cada una de las tres carpetas encuentro tres archivos llamados ‘junk.txt’. El contenido de los dos primeros archivos esta codificado en *base64*, mientras que el tercero lo está en *hexadecimal*. Para la decodificación se pueden utilzar mútiples páginas web, de tal manera que obtengo lo siguiente:
+
+| Carpeta | Contenido            | Codificación | Contenido decodificado |
+|---------|----------------------|--------------|------------------------|
+|    1    | MTIzNF9zZWM=         | Base64       | 1234_sec               |
+|    3    | aG9vcmEh             | Base64       | hoora!                 |
+|    11   | 63616c69666f726e6961 | Hexadecimal  | hoora!                 |
