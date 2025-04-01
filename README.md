@@ -10,6 +10,7 @@ Explicar la realización del siguiente _Capture the flag_ dentro del mundo educa
 - Realizar fingerprinting y enumeración de puertos y enumeración web (mediante *Dirsearch*).
 - Explotar vulnerabilidades con *Metasploit*.
 - Montar un sevidor fácilmente con *Python*.
+- Decodificar código en base64 o hexadecimal.
 - Buscar información oculta en imágenes con *Steghide*.
 - Escalada de privilegios.
 
@@ -65,7 +66,7 @@ El *exploit* nos permite acceder a la máquina e interactuar con ella mediante e
 
 ![image](https://github.com/user-attachments/assets/d7349ff0-4d1b-403f-abc9-b5c17a291205)
 
-Ahora es necesario escalar privilegios para encontrar la segunda bandera. Para ello, me dirijo a la otra carpeta sospechosa que ya había encontrado en la enumeración web: ‘notes’. Dentro de esta encuentro el archivo ‘notes.txt’, el cual contiene únicamente los números 1, 3 y 11. Así que me dispongo a revisar las carpetas con los mismos nombres que se encontraban en '/var/www/html'. Dentro de cada una de las tres carpetas encuentro tres archivos llamados ‘junk.txt’. El contenido de los dos primeros archivos esta codificado en *base64*, mientras que el tercero lo está en *hexadecimal*. Para la decodificación se pueden utilzar mútiples páginas web, de tal manera que obtengo lo siguiente:
+Ahora es necesario escalar privilegios para encontrar la segunda bandera. Para ello, me dirijo a la otra carpeta sospechosa que ya había encontrado en la enumeración web: ‘notes’. Dentro de esta encuentro el archivo ‘notes.txt’, el cual contiene únicamente los números 1, 3 y 11. Así que me dispongo a revisar las carpetas con los mismos nombres que se encontraban en '/var/www/html'. Dentro de cada una de las tres carpetas encuentro tres archivos llamados ‘junk.txt’. El contenido de los dos primeros archivos esta codificado en *base64*, mientras que el tercero lo está en *hexadecimal*. Para la **decodificación** se pueden utilzar mútiples páginas web, de tal manera que obtengo lo siguiente:
 
 | Carpeta | Contenido            | Codificación | Contenido decodificado |
 |---------|----------------------|--------------|------------------------|
@@ -83,7 +84,7 @@ Ahora solo es necesario escribir en el navegador la IP junto con el puerto ‘17
 
 ![image](https://github.com/user-attachments/assets/b3052253-8c55-4a8a-8015-3d3e5976ee3b)
 
-Puesto que las imágenes a simple vista no arrojan información alguna, con la ayuda de la herramienta *Steghide* busco información oculta dentro de estas que no sea perceptible con sólo visualizarlas. Indico la acción de 'extraer' y con el comando ‘-sF’ indico el archivo del que obtener la información. Al ejecutar el comando, demanda una contraseña, momento en el que utilizo las passwords recuperadas de los archivos ‘junk.txt’. La información encontrada la vuelca en un archivo de texto, el cual puede ser leído con el comando <code>cat</code>. De esta manera averiguo la contraseña del usuario *root*, así como la localización de la segunda bandera.
+Puesto que las imágenes a simple vista no arrojan información alguna, con la ayuda de la herramienta **Steghide** busco información oculta dentro de estas que no sea perceptible con sólo visualizarlas. Indico la acción de 'extraer' y con el comando ‘-sF’ indico el archivo del que obtener la información. Al ejecutar el comando, demanda una contraseña, momento en el que utilizo las passwords recuperadas de los archivos ‘junk.txt’. La información encontrada la vuelca en un archivo de texto, el cual puede ser leído con el comando <code>cat</code>. De esta manera averiguo la contraseña del usuario *root*, así como la localización de la segunda bandera.
 
 <code>steghide extract -sF nombre_imagen</code>
 
