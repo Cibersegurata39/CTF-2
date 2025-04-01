@@ -45,6 +45,7 @@ Seguidamente, enumero los directorios y archivos alojados en el servidor. En est
 
 Con la misma herramienta busco posibles archivos cambiadno la lista por 'raft-large-files.txt'. En este caso solo ha encontrado el archivo ‘phpinfo.php’, el cual se puede acceder desde el navegador de *Firefox*. Dentro hay configuraciones que se pueden utilizar a nuestro favor, pero lo interesante es el uso del módulo *FPM/FastCGI* para manejar las solicitudes con el servidor web, lo cual me será de utilidad para el ataque.
 
+
 ### Vulnerabilidades explotadas
 
 La versión del servidor *nginx* pertenece al año 2018, así que con la ayuda de **Metasploit** voy a investigar si existe algún exploit que pueda utilizar. Además, si me fijo en el 'phpinfo.php', la versión *php* utilizada es la 7.1.33. Buscando en NIST se encuentra una vulnerabilidad que afecta al *PHP-FPM* y que presenta esta versión de *php*, la cual provoca un *buffer underflow*, donde los datos se escriben fuera de los límites del búfer y sobrescribe áreas de memoria que se encuentran justo por debajo.
@@ -59,7 +60,7 @@ En *Metasploit* encuentro un módulo para aprovechar la vulnerabilidad ‘exploi
 
 El *exploit* nos permite acceder a la máquina e interactuar con ella mediante el *meterpreter*. Para tener la *shell* más amigable y poder hacer uso de todos los comandos disponible, se introduce el comando *shell*. Lo siguiente es listar el contenido del directorio actual (/var/www/html) y aquí aparecen todos los directorios encontrados anteriormente por *Dirsearch*. Al dirigirnos a la carpeta ‘admin’, encontramos el archivo oculto ‘.flag.txt’. 
 
-**Flag**: 58C250724441ED96979209921FAC3D89
+**Flag: 58C250724441ED96979209921FAC3D89**
 
 ![image](https://github.com/user-attachments/assets/d7349ff0-4d1b-403f-abc9-b5c17a291205)
 
@@ -97,4 +98,4 @@ Con todo esto ya puedo escalar privilegios, dirigirme al directorio en cuestión
 
 ![image](https://github.com/user-attachments/assets/8ec3a026-209c-4e83-adda-76799e92c8d3)
 
-**Flag**: 5378aef8946e502ca645a55cbedc5661
+**Flag: 5378aef8946e502ca645a55cbedc5661**
