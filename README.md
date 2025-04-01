@@ -1,5 +1,5 @@
 # CTF-2
-Capture the flag donde se trabaja la enumeración,
+Capture the flag donde se trabaja la enumeración y finfgerprinting, Metasploit, Python 3, Steghide y la escalada de privilegios.
 
 ## Objetivo
 
@@ -7,15 +7,16 @@ Explicar la realización del _Capture the flag_ siguiente dentro del mundo educa
 
 ## Que hemos aprendido?
 
-- Realizar fingerprinting y enumeración de puertos y enumeración web (en este caso utilizando una nueva herramienta llamada Dirsearch.
+- Realizar fingerprinting y enumeración de puertos y enumeración web (mediante Dirsearch).
 - Explotar vulnerabilidades con *Metasploit*.
+- Montar un sevidor fácilmente con *Python*.
 - Escalada de privilegios.
 
 ## Herramientas utilizadas
 
 - Kali Linux.
 - Enumeración: Nmap, Dirsearch.
-- Penetración: Metasploit, Python3. 
+- Penetración: Metasploit, Python3, Steghide. 
 
 ## Steps
 
@@ -68,3 +69,31 @@ Ahora es necesario escalar privilegios para encontrar la segunda bandera. Para e
 |    1    | MTIzNF9zZWM=         | Base64       | 1234_sec               |
 |    3    | aG9vcmEh             | Base64       | hoora!                 |
 |    11   | 63616c69666f726e6961 | Hexadecimal  | hoora!                 |
+
+Lo siguiente a comprobar es la última de las carpetas del directorio /var/www/html, ‘images’. Dentro de esta, se encuentran una serie de imágenes también enumeradas del 0 al 15, lo cual es bastante sospechoso. Para poder visualizarlas, hago uso de nuevo de *python3* para montar un servidor desde el mismo directorio ‘images’. Utilizo el parámetro ‘-m’ para indicar el montaje del servidor y en que puerto (8080) localizarlo.
+
+<code>python3 -m http.server 8080</code>
+
+Ahora solo es necesario escribir en el navegador la IP junto con el puerto ‘172.17.0.2:8080’ y descargar las imágenes 1, 3 y 11, siguendo la pista proporcionada. Para llevar a cabo la descarga se utiliza el comando 'wget' y le paso la ruta de cada una de las imágenes, todo esto desde mi máquina.
+
+<code>wget http://172.17.0.2:8080/ImagenADescargar</code>
+
+![image](https://github.com/user-attachments/assets/b3052253-8c55-4a8a-8015-3d3e5976ee3b)
+
+Puesto que las imágenes a simple vista no arrojan información alguna, con la ayuda de la herramienta *Steghide* busco información oculta dentro de las imágenes que no sea perceptible con sólo visualizarlas. Indico la acción de 'extraer' y con el comando ‘-sF’ indico el archivo del que obtener la información. Al ejecutar el comando, demanda una contraseña, momento en el que utilizo las passwords recuperadas de los archivos ‘junk.txt’. La información encontrada la vuelca en un archivo de texto, el cual puede ser leído con el comando 'cat'. De esta manera averiguo la contraseña del usuario *root*, así como la localización de la segunda bandera.
+
+<code>steghide extract -sF nombre_imagen</code>
+
+![image](https://github.com/user-attachments/assets/80cf5781-b1fe-4439-bd36-8e2487a49cad)
+
+| Imagen | Contenido            |
+|--------|----------------------|
+|    1   | user: root           |
+|    3   | pass: !3QwX?j4       |
+|    11  | flag: /root/.hide/.last |
+
+Con todo esto ya puedo escalar privilegios, dirigirme al directorio en cuestión y recuperar la *flag*.
+
+![image](https://github.com/user-attachments/assets/8ec3a026-209c-4e83-adda-76799e92c8d3)
+
+**Flag**: 5378aef8946e502ca645a55cbedc5661
